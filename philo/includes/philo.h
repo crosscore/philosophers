@@ -6,7 +6,7 @@
 /*   By: ysakahar <ysakahar@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/28 21:07:35 by ysakahar          #+#    #+#             */
-/*   Updated: 2023/03/27 17:16:43 by ysakahar         ###   ########.fr       */
+/*   Updated: 2023/03/28 06:13:22 by ysakahar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,16 +61,6 @@ typedef struct s_philo
 	t_table				*table;
 }	t_philo;
 
-/*
-ダブルポインタ t_philo **philos は、ポインタの配列を意味します。
-この場合、philos は t_philo 構造体へのポインタの配列を指します。
-哲学者の数は実行時に決定されるため、動的にメモリを確保し、
-それぞれの哲学者に対応する t_philo 構造体へのポインタを格納する必要があります。
-例えば、3人の哲学者がいる場合、以下のようになります。
-t_philo *philo1;
-t_philo *philo2;
-t_philo *philo3;
-t_philo *philos[] = {philo1, philo2, philo3};*/
 typedef struct s_table
 {
 	time_t			start_time;
@@ -112,7 +102,7 @@ bool			is_simulation_stopped(t_table *table);
 bool			is_valid_input(int argc, char **argv);
 int				strdigit_to_int(char *str);
 
-/* output.c */
+/* output_status.c */
 void			output_status(t_philo *philo, bool reaper, t_ph_status status);
 void			print_meal_completion_status(t_table *table);
 void			*free_error_ret_null(char *str, char *details, t_table *table);

@@ -5,16 +5,13 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ysakahar <ysakahar@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/28 21:07:27 by ysakahar          #+#    #+#             */
-/*   Updated: 2023/03/27 09:28:20 by ysakahar         ###   ########.fr       */
+/*   Created: 2023/03/28 06:12:39 by ysakahar          #+#    #+#             */
+/*   Updated: 2023/03/28 06:12:41 by ysakahar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-/* destroy_mutexts:
-プログラムによって作成されたすべてのミューテックス (fork_mutexes、meal_time_mutex、
-write_mutex、sim_ended_mutex) を破棄します。*/
 void	destroy_mutexes(t_table *table)
 {
 	unsigned int	i;
@@ -30,12 +27,6 @@ void	destroy_mutexes(t_table *table)
 	pthread_mutex_destroy(&table->sim_ended_mutex);
 }
 
-/* free_table:
-プログラムによって割り当てられたすべてのメモリを解放します。
-解放するものが何もない場合、またはすべてのメモリが解放された場合は、NULLポインターを返します。
-pthread_mutex_destroy()関数はmutexの破棄を行いますが、mutexが格納されているメモリ領域自体は解放しません。
-table->fork_mutexesは、malloc()で確保されたメモリ領域を指しており、
-このメモリ領域は明示的にfree()関数を呼び出すことで解放する必要があります。*/
 void	*free_table(t_table *table)
 {
 	unsigned int	i;
@@ -60,9 +51,6 @@ void	*free_table(t_table *table)
 	return (NULL);
 }
 
-/* print_error:
-コンソールにメッセージを書き込みます。指定されたexit_noを返します。
-エラー管理に使用されます。*/
 int	print_error(char *str, char *detail, int exit_no)
 {
 	if (!detail)
@@ -72,9 +60,6 @@ int	print_error(char *str, char *detail, int exit_no)
 	return (exit_no);
 }
 
-/* free_error_ret_null:
-割り当てられたメモリを解放し、エラーメッセージを出力してNULLポインタを返します。
-初期化中のエラー管理に使用されます。*/
 void	*free_error_ret_null(char *str, char *details, t_table *table)
 {
 	if (table != NULL)

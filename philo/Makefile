@@ -5,8 +5,8 @@
 #                                                     +:+ +:+         +:+      #
 #    By: ysakahar <ysakahar@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2023/03/01 00:11:40 by ysakahar          #+#    #+#              #
-#    Updated: 2023/03/27 18:14:45 by ysakahar         ###   ########.fr        #
+#    Created: 2023/03/28 06:16:16 by ysakahar          #+#    #+#              #
+#    Updated: 2023/03/31 10:04:03 by ysakahar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ CC		:= gcc
 CFLAGS	:= -Werror -Wall -Wextra -pthread
 INC		:= -I ./includes/
 
-DEBUG_MODE ?= 1
+DEBUG_MODE ?= 0
 CFLAGS	+= -D DEBUG_MODE=$(DEBUG_MODE)
 
 ifeq ($(DEBUG_MODE), 1)
@@ -24,6 +24,7 @@ endif
 
 SRC_PATH	:=	src/
 OBJ_PATH	:=	obj/
+
 SRC			:=	create_table.c \
 				free_and_errors.c \
 				input_validator.c \
@@ -31,7 +32,7 @@ SRC			:=	create_table.c \
 				main.c \
 				output_status.c \
 				philosopher.c \
-				time_operations.c \
+				time_operations.c
 
 SRCS	:= $(addprefix $(SRC_PATH), $(SRC))
 OBJ		:= $(SRC:.c=.o)
@@ -40,7 +41,7 @@ OBJS	:= $(addprefix $(OBJ_PATH), $(OBJ))
 all: $(NAME)
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c | $(OBJ_PATH)
-	$(CC) $(CFLAGS) -c $< -o $@ $(INC)
+	$(CC) $(CFLAGS) $(INC) -c $< -o $@
 
 $(NAME): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $@

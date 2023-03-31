@@ -5,16 +5,13 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ysakahar <ysakahar@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/26 15:16:42 by ysakahar          #+#    #+#             */
-/*   Updated: 2023/03/26 15:16:44 by ysakahar         ###   ########.fr       */
+/*   Created: 2023/03/28 06:12:03 by ysakahar          #+#    #+#             */
+/*   Updated: 2023/03/28 06:12:05 by ysakahar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-/* print_meal_completion_status:
-食べる回数が指定されている場合は、シミュレーションの結果を出力します。
-デバッグ目的でのみ使用されます。*/
 void	print_meal_completion_status(t_table *table)
 {
 	unsigned int	i;
@@ -35,9 +32,6 @@ void	print_meal_completion_status(t_table *table)
 	return ;
 }
 
-/* debug_print_status:
-哲学者のステータスを読みやすくカラフルな形式で出力して、デバッグに役立てます。
-フォークの取得状況については、哲学者がどのフォークを取得したかを示す追加情報が表示されます。*/
 static void	debug_print_status(t_philo *philo, char *color,
 								char *str, t_ph_status status)
 {
@@ -55,9 +49,6 @@ static void	debug_print_status(t_philo *philo, char *color,
 			color, philo->id + 1, str);
 }
 
-/* debug_output_status:
-デバッグモードのステータス書き込みをリダイレクトします。
-このオプションでは、philo.hでDEBUG_FORMATTINGオプションを1に設定する必要があります。*/
 static void	debug_output_status(t_philo *philo, t_ph_status status)
 {
 	if (status == DIED)
@@ -74,21 +65,12 @@ static void	debug_output_status(t_philo *philo, t_ph_status status)
 		debug_print_status(philo, GREEN, "has taken a fork", status);
 }
 
-/* print_status:
-Prints a philosopher's status in plain text as required by the project
-subject:
-	timestamp_in_ms X status */
 static void	print_status(t_philo *philo, char *str)
 {
 	printf("%ld %d %s\n", get_current_time_ms() - philo->table->start_time,
 		philo->id + 1, str);
 }
 
-/* output_status:
-シミュレーションがまだアクティブである限り、哲学者のステータスを出力します。
-書き込みミューテックスをロックして、異なるスレッドからのメッセージが絡み合わないようにします。
-philo.hでDEBUG_FORMATTING=1の時、ステータスはデバッグに役立つ色と追加情報でフォーマットされます。
-それ以外の場合、出力はプロジェクトの対象で必要な通常の形式になります。*/
 void	output_status(t_philo *philo, bool reaper_report, t_ph_status status)
 {
 	pthread_mutex_lock(&philo->table->write_mutex);
