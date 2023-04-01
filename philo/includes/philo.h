@@ -6,7 +6,7 @@
 /*   By: ysakahar <ysakahar@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/28 21:07:35 by ysakahar          #+#    #+#             */
-/*   Updated: 2023/03/28 06:13:22 by ysakahar         ###   ########.fr       */
+/*   Updated: 2023/04/01 19:43:20 by ysakahar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <stdio.h>
 # include <unistd.h>
+# include <string.h>
 # include <stdlib.h>
 # include <stdbool.h>
 # include <limits.h>
@@ -102,7 +103,7 @@ bool			is_simulation_stopped(t_table *table);
 bool			is_valid_input(int argc, char **argv);
 int				strdigit_to_int(char *str);
 
-/* output_status.c */
+/* output.c */
 void			output_status(t_philo *philo, bool reaper, t_ph_status status);
 void			print_meal_completion_status(t_table *table);
 void			*free_error_ret_null(char *str, char *details, t_table *table);
@@ -113,8 +114,10 @@ void			*philosopher(void *data);
 
 /* time_operations.c */
 time_t			get_current_time_ms(void);
-void			wait_philosopher(t_table *table, time_t sleep_time,
-					useconds_t interval);
+void			wait_time_for_action(t_table *table, time_t sleep_time);
 void			wait_until_start_time(time_t start_time);
+
+/* utils.c */
+void			*ft_calloc(size_t count, size_t size);
 
 #endif

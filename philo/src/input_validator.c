@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ysakahar <ysakahar@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/28 06:12:26 by ysakahar          #+#    #+#             */
-/*   Updated: 2023/03/28 06:12:28 by ysakahar         ###   ########.fr       */
+/*   Created: 2023/04/01 19:22:21 by ysakahar          #+#    #+#             */
+/*   Updated: 2023/04/01 19:39:14 by ysakahar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,17 @@
 int	strdigit_to_int(char *str)
 {
 	unsigned long long int	n;
+	unsigned long long int	prev_n;
 	int						i;
 
 	i = 0;
 	n = 0;
 	while (str[i] && (str[i] >= '0' && str[i] <= '9'))
 	{
+		prev_n = n;
 		n = n * 10 + (str[i] - '0');
+		if (prev_n > n)
+			return (-1);
 		i++;
 	}
 	if (n > INT_MAX)

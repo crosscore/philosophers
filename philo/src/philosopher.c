@@ -5,46 +5,28 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ysakahar <ysakahar@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/31 10:51:27 by ysakahar          #+#    #+#             */
-/*   Updated: 2023/03/31 10:51:29 by ysakahar         ###   ########.fr       */
+/*   Created: 2023/04/01 19:22:38 by ysakahar          #+#    #+#             */
+/*   Updated: 2023/04/01 20:06:55 by ysakahar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-static void	think_routine(t_philo *philo, bool silent)
-{
-	if (silent == false)
-		output_status(philo, false, THINKING);
-	while (is_simulation_stopped(philo->table) == false)
-	{
-		pthread_mutex_lock(&philo->table->fork_mutexes[philo->fork[0]]);
-		pthread_mutex_lock(&philo->table->fork_mutexes[philo->fork[1]]);
-		if (is_simulation_stopped(philo->table) == false)
-		{
-			pthread_mutex_unlock(&philo->table->fork_mutexes[philo->fork[1]]);
-			pthread_mutex_unlock(&philo->table->fork_mutexes[philo->fork[0]]);
-			break ;
-		}
-		else
-		{
-			pthread_mutex_unlock(&philo->table->fork_mutexes[philo->fork[1]]);
-			pthread_mutex_unlock(&philo->table->fork_mutexes[philo->fork[0]]);
-		}
-	}
-}
-
-static void	eat_sleep_routine(t_philo *philo)
+void	got_fork_routine(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->table->fork_mutexes[philo->fork[0]]);
 	output_status(philo, false, GOT_FORK_1);
 	pthread_mutex_lock(&philo->table->fork_mutexes[philo->fork[1]]);
 	output_status(philo, false, GOT_FORK_2);
+}
+
+void	eat_routine(t_philo *philo)
+{
 	output_status(philo, false, EATING);
 	pthread_mutex_lock(&philo->meal_time_mutex);
 	philo->last_meal_time = get_current_time_ms();
 	pthread_mutex_unlock(&philo->meal_time_mutex);
-	wait_philosopher(philo->table, philo->table->time_to_eat, 1);
+	wait_time_for_action(philo->table, philo->table->time_to_eat);
 	if (is_simulation_stopped(philo->table) == false)
 	{
 		pthread_mutex_lock(&philo->meal_time_mutex);
@@ -53,15 +35,46 @@ static void	eat_sleep_routine(t_philo *philo)
 	}
 	pthread_mutex_unlock(&philo->table->fork_mutexes[philo->fork[1]]);
 	pthread_mutex_unlock(&philo->table->fork_mutexes[philo->fork[0]]);
+}
+
+void	sleep_routine(t_philo *philo)
+{
 	output_status(philo, false, SLEEPING);
-	wait_philosopher(philo->table, philo->table->time_to_sleep, 1);
+	wait_time_for_action(philo->table, philo->table->time_to_sleep);
+}
+
+static void	got_fork_eat_sleep_routine(t_philo *philo)
+{
+	got_fork_routine(philo);
+	eat_routine(philo);
+	sleep_routine(philo);
+}
+
+static void	think_routine(t_philo *philo, bool silent)
+{
+	time_t	time_to_think;
+
+	pthread_mutex_lock(&philo->meal_time_mutex);
+	time_to_think = (philo->table->time_to_die
+			- (get_current_time_ms() - philo->last_meal_time)
+			- philo->table->time_to_eat) / 2;
+	pthread_mutex_unlock(&philo->meal_time_mutex);
+	if (time_to_think > 240)
+		time_to_think = 240;
+	else if (silent == true && time_to_think == 0)
+		time_to_think = 1;
+	else if (time_to_think < 0)
+		time_to_think = 0;
+	if (silent == false)
+		output_status(philo, false, THINKING);
+	wait_time_for_action(philo->table, time_to_think);
 }
 
 static void	*lone_philo_routine(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->table->fork_mutexes[philo->fork[0]]);
 	output_status(philo, false, GOT_FORK_1);
-	wait_philosopher(philo->table, philo->table->time_to_die, 1);
+	wait_time_for_action(philo->table, philo->table->time_to_die);
 	output_status(philo, false, DIED);
 	pthread_mutex_unlock(&philo->table->fork_mutexes[philo->fork[0]]);
 	return (NULL);
@@ -86,7 +99,7 @@ void	*philosopher(void *data)
 		think_routine(philo, true);
 	while (is_simulation_stopped(philo->table) == false)
 	{
-		eat_sleep_routine(philo);
+		got_fork_eat_sleep_routine(philo);
 		think_routine(philo, false);
 	}
 	return (NULL);

@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ysakahar <ysakahar@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/28 06:12:46 by ysakahar          #+#    #+#             */
-/*   Updated: 2023/03/28 06:12:48 by ysakahar         ###   ########.fr       */
+/*   Created: 2023/04/01 19:22:04 by ysakahar          #+#    #+#             */
+/*   Updated: 2023/04/01 19:22:06 by ysakahar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static pthread_mutex_t	*create_forks(t_table *table)
 	pthread_mutex_t	*forks;
 	unsigned int	i;
 
-	forks = malloc(sizeof(pthread_mutex_t) * table->number_of_philos);
+	forks = ft_calloc(table->number_of_philos, sizeof(pthread_mutex_t));
 	if (!forks)
 		return (free_error_ret_null(ERR_MALLOC, NULL, table));
 	i = 0;
@@ -61,13 +61,13 @@ static t_philo	**create_philosophers(t_table *table)
 	t_philo			**philos;
 	unsigned int	i;
 
-	philos = malloc(sizeof(t_philo) * table->number_of_philos);
+	philos = ft_calloc(table->number_of_philos, sizeof(t_philo));
 	if (!philos)
 		return (free_error_ret_null(ERR_MALLOC, NULL, table));
 	i = 0;
 	while (i < table->number_of_philos)
 	{
-		philos[i] = malloc(sizeof(t_philo) * 1);
+		philos[i] = ft_calloc(1, sizeof(t_philo));
 		if (!philos[i])
 			return (free_error_ret_null(ERR_MALLOC, NULL, table));
 		if (pthread_mutex_init(&philos[i]->meal_time_mutex, NULL) != 0)
@@ -87,7 +87,7 @@ t_table	*create_table(int argc, char **argv)
 	int		i;
 
 	i = 1;
-	table = malloc(sizeof(t_table) * 1);
+	table = ft_calloc(1, sizeof(t_table));
 	if (!table)
 		return (free_error_ret_null(ERR_MALLOC, NULL, NULL));
 	table->number_of_philos = strdigit_to_int(argv[i++]);

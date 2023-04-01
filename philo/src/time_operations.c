@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ysakahar <ysakahar@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/28 06:11:45 by ysakahar          #+#    #+#             */
-/*   Updated: 2023/03/28 06:11:47 by ysakahar         ###   ########.fr       */
+/*   Created: 2023/04/01 19:22:45 by ysakahar          #+#    #+#             */
+/*   Updated: 2023/04/01 19:22:47 by ysakahar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ time_t	get_current_time_ms(void)
 	return ((current_time.tv_sec * 1000) + (current_time.tv_usec / 1000));
 }
 
-void	wait_philosopher(t_table *table, time_t sleep_time, useconds_t interval)
+void	wait_time_for_action(t_table *table, time_t sleep_time)
 {
 	time_t	wake_up_time;
 
@@ -29,7 +29,7 @@ void	wait_philosopher(t_table *table, time_t sleep_time, useconds_t interval)
 	{
 		if (is_simulation_stopped(table))
 			break ;
-		usleep(interval);
+		usleep(100);
 	}
 }
 
