@@ -6,7 +6,7 @@
 /*   By: ysakahar <ysakahar@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:22:27 by ysakahar          #+#    #+#             */
-/*   Updated: 2023/04/01 19:37:38 by ysakahar         ###   ########.fr       */
+/*   Updated: 2023/04/03 13:32:22 by ysakahar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,9 @@ static void	end_simulation(t_table	*table)
 		i++;
 	}
 	if (table->number_of_philos > 1)
+	{
 		pthread_join(table->grim_reaper, NULL);
+	}
 	if (DEBUG_MODE == true && table->must_eat_count != -1)
 		print_meal_completion_status(table);
 	free_table(table);

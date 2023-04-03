@@ -6,7 +6,7 @@
 /*   By: ysakahar <ysakahar@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:22:04 by ysakahar          #+#    #+#             */
-/*   Updated: 2023/04/01 19:22:06 by ysakahar         ###   ########.fr       */
+/*   Updated: 2023/04/03 14:18:23 by ysakahar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,9 @@ static bool	initialize_table_mutexes(t_table *table)
 	table->fork_mutexes = create_forks(table);
 	if (!table->fork_mutexes)
 		return (false);
-	if (pthread_mutex_init(&table->sim_ended_mutex, NULL) != 0)
-		return ((bool)free_error_ret_null(ERR_MUTEX, NULL, table));
 	if (pthread_mutex_init(&table->write_mutex, NULL) != 0)
+		return ((bool)free_error_ret_null(ERR_MUTEX, NULL, table));
+	if (pthread_mutex_init(&table->is_sim_ended_mutex, NULL) != 0)
 		return ((bool)free_error_ret_null(ERR_MUTEX, NULL, table));
 	return (true);
 }

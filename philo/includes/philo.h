@@ -6,7 +6,7 @@
 /*   By: ysakahar <ysakahar@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/28 21:07:35 by ysakahar          #+#    #+#             */
-/*   Updated: 2023/04/01 19:43:20 by ysakahar         ###   ########.fr       */
+/*   Updated: 2023/04/03 20:36:31 by ysakahar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 # include <pthread.h>
 
 /* Macros */
-# define MAX_PHILOSOPHERS_STR "240"
+# define MAX_PHILOSOPHERS_STR "200"
 
 # ifndef DEBUG_MODE
 #  define DEBUG_MODE 0
@@ -55,10 +55,10 @@ typedef struct s_philo
 {
 	pthread_t			thread;
 	unsigned int		id;
-	unsigned int		meal_count;
 	unsigned int		fork[2];
-	pthread_mutex_t		meal_time_mutex;
+	unsigned int		meal_count;
 	time_t				last_meal_time;
+	pthread_mutex_t		meal_time_mutex;
 	t_table				*table;
 }	t_philo;
 
@@ -72,8 +72,8 @@ typedef struct s_table
 	time_t			time_to_sleep;
 	int				must_eat_count;
 	bool			is_sim_ended;
-	pthread_mutex_t	sim_ended_mutex;
 	pthread_mutex_t	write_mutex;
+	pthread_mutex_t	is_sim_ended_mutex;
 	pthread_mutex_t	*fork_mutexes;
 	t_philo			**philos;
 }	t_table;
@@ -97,7 +97,6 @@ void			destroy_mutexes(t_table *table);
 
 /* grim_reaper.c */
 void			*grim_reaper(void *data);
-bool			is_simulation_stopped(t_table *table);
 
 /* input_validator.c */
 bool			is_valid_input(int argc, char **argv);
@@ -109,15 +108,22 @@ void			print_meal_completion_status(t_table *table);
 void			*free_error_ret_null(char *str, char *details, t_table *table);
 int				print_error(char *str, char *detail, int exit_no);
 
+/* philosopher_routine.c */
+void			think_routine(t_philo *philo);
+void			got_fork_and_eat_routine(t_philo *philo);
+void			sleep_routine(t_philo *philo);
+
 /*	philosopher.c */
 void			*philosopher(void *data);
 
 /* time_operations.c */
 time_t			get_current_time_ms(void);
-void			wait_time_for_action(t_table *table, time_t sleep_time);
+void			wait_time_for_action(t_table *table, time_t wait_time);
 void			wait_until_start_time(time_t start_time);
 
 /* utils.c */
 void			*ft_calloc(size_t count, size_t size);
+bool			is_simulation_ended(t_table *table);
+void			set_simulation_ended(t_table *table);
 
 #endif

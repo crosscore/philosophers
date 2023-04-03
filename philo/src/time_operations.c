@@ -6,7 +6,7 @@
 /*   By: ysakahar <ysakahar@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:22:45 by ysakahar          #+#    #+#             */
-/*   Updated: 2023/04/01 19:22:47 by ysakahar         ###   ########.fr       */
+/*   Updated: 2023/04/03 18:23:39 by ysakahar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,16 +20,22 @@ time_t	get_current_time_ms(void)
 	return ((current_time.tv_sec * 1000) + (current_time.tv_usec / 1000));
 }
 
-void	wait_time_for_action(t_table *table, time_t sleep_time)
+void	wait_time_for_action(t_table *table, time_t wait_time)
 {
 	time_t	wake_up_time;
 
-	wake_up_time = get_current_time_ms() + sleep_time;
+	wake_up_time = get_current_time_ms() + wait_time;
 	while (get_current_time_ms() < wake_up_time)
 	{
-		if (is_simulation_stopped(table))
+		pthread_mutex_lock(&table->is_sim_ended_mutex);
+		if (table->is_sim_ended)
+		{
+			pthread_mutex_unlock(&table->is_sim_ended_mutex);
 			break ;
-		usleep(100);
+		}
+		else
+			pthread_mutex_unlock(&table->is_sim_ended_mutex);
+		usleep(99);
 	}
 }
 

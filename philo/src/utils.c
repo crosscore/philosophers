@@ -6,7 +6,7 @@
 /*   By: ysakahar <ysakahar@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:22:51 by ysakahar          #+#    #+#             */
-/*   Updated: 2023/04/01 19:22:53 by ysakahar         ###   ########.fr       */
+/*   Updated: 2023/04/03 20:20:12 by ysakahar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,4 +23,23 @@ void	*ft_calloc(size_t count, size_t size)
 		return (NULL);
 	memset(ptr, 0, total_size);
 	return (ptr);
+}
+
+bool	is_simulation_ended(t_table *table)
+{
+	bool	result;
+
+	result = false;
+	pthread_mutex_lock(&table->is_sim_ended_mutex);
+	if (table->is_sim_ended)
+		result = true;
+	pthread_mutex_unlock(&table->is_sim_ended_mutex);
+	return (result);
+}
+
+void	set_simulation_ended(t_table *table)
+{
+	pthread_mutex_lock(&table->is_sim_ended_mutex);
+	table->is_sim_ended = true;
+	pthread_mutex_unlock(&table->is_sim_ended_mutex);
 }

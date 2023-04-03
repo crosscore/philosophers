@@ -6,7 +6,7 @@
 #    By: ysakahar <ysakahar@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/01 00:11:40 by ysakahar          #+#    #+#              #
-#    Updated: 2023/04/01 19:13:58 by ysakahar         ###   ########.fr        #
+#    Updated: 2023/04/03 20:23:16 by ysakahar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ CC		:= gcc
 CFLAGS	:= -Werror -Wall -Wextra -pthread
 INC		:= -I ./includes/
 
-DEBUG_MODE ?= 1
+DEBUG_MODE ?= 0
 CFLAGS	+= -D DEBUG_MODE=$(DEBUG_MODE)
 
 ifeq ($(DEBUG_MODE), 1)
@@ -30,6 +30,7 @@ SRC			:=	create_table.c \
 				grim_reaper.c \
 				main.c \
 				output_status.c \
+				philosopher_routine.c \
 				philosopher.c \
 				time_operations.c \
 				utils.c

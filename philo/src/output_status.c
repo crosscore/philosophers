@@ -6,7 +6,7 @@
 /*   By: ysakahar <ysakahar@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:22:32 by ysakahar          #+#    #+#             */
-/*   Updated: 2023/04/01 19:22:34 by ysakahar         ###   ########.fr       */
+/*   Updated: 2023/04/03 18:55:26 by ysakahar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,18 +35,21 @@ void	print_meal_completion_status(t_table *table)
 static void	debug_print_status(t_philo *philo, char *color,
 								char *str, t_ph_status status)
 {
-	if (status == GOT_FORK_1)
-		printf("[%6ld] %s%03d %s\e[0m: fork[%d]\n",
-			get_current_time_ms() - philo->table->start_time,
-			color, philo->id + 1, str, philo->fork[0]);
-	else if (status == GOT_FORK_2)
-		printf("[%6ld] %s%03d %s\e[0m: fork[%d]\n",
-			get_current_time_ms() - philo->table->start_time,
-			color, philo->id + 1, str, philo->fork[1]);
-	else
-		printf("[%6ld] %s%03d %s\e[0m\n",
-			get_current_time_ms() - philo->table->start_time,
-			color, philo->id + 1, str);
+	if (!is_simulation_ended(philo->table) || status == DIED)
+	{
+		if (status == GOT_FORK_1)
+			printf("[%6ld] %s%03d %s\e[0m: fork[%d]\n",
+				get_current_time_ms() - philo->table->start_time,
+				color, philo->id + 1, str, philo->fork[0]);
+		else if (status == GOT_FORK_2)
+			printf("[%6ld] %s%03d %s\e[0m: fork[%d]\n",
+				get_current_time_ms() - philo->table->start_time,
+				color, philo->id + 1, str, philo->fork[1]);
+		else
+			printf("[%6ld] %s%03d %s\e[0m\n",
+				get_current_time_ms() - philo->table->start_time,
+				color, philo->id + 1, str);
+	}
 }
 
 static void	debug_output_status(t_philo *philo, t_ph_status status)
@@ -67,18 +70,15 @@ static void	debug_output_status(t_philo *philo, t_ph_status status)
 
 static void	print_status(t_philo *philo, char *str)
 {
-	printf("%ld %d %s\n", get_current_time_ms() - philo->table->start_time,
-		philo->id + 1, str);
+	printf("%ld %d %s\n", get_current_time_ms() - philo->table->start_time, \
+						philo->id + 1, str);
 }
 
 void	output_status(t_philo *philo, bool reaper_report, t_ph_status status)
 {
-	pthread_mutex_lock(&philo->table->write_mutex);
-	if (is_simulation_stopped(philo->table) == true && reaper_report == false)
-	{
-		pthread_mutex_unlock(&philo->table->write_mutex);
+	if (is_simulation_ended(philo->table) && !reaper_report)
 		return ;
-	}
+	pthread_mutex_lock(&philo->table->write_mutex);
 	if (DEBUG_MODE == true)
 	{
 		debug_output_status(philo, status);

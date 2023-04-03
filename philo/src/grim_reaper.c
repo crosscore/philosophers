@@ -5,90 +5,101 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ysakahar <ysakahar@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/01 19:22:15 by ysakahar          #+#    #+#             */
-/*   Updated: 2023/04/01 19:22:18 by ysakahar         ###   ########.fr       */
+/*   Created: 2023/04/02 20:47:25 by ysakahar          #+#    #+#             */
+/*   Updated: 2023/04/03 20:20:06 by ysakahar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-static void	set_simulation_stop_flag(t_table *table, bool stop_flag)
-{
-	pthread_mutex_lock(&table->sim_ended_mutex);
-	table->is_sim_ended = stop_flag;
-	pthread_mutex_unlock(&table->sim_ended_mutex);
-}
-
-bool	is_simulation_stopped(t_table *table)
-{
-	bool	stopped;
-
-	stopped = false;
-	pthread_mutex_lock(&table->sim_ended_mutex);
-	if (table->is_sim_ended == true)
-		stopped = true;
-	pthread_mutex_unlock(&table->sim_ended_mutex);
-	return (stopped);
-}
-
 static bool	check_philo_death(t_philo *philo)
 {
 	time_t	current_time;
+	time_t	time_to_die;
 
-	current_time = get_current_time_ms();
 	pthread_mutex_lock(&philo->meal_time_mutex);
-	if (current_time >= (philo->table->time_to_die + philo->last_meal_time))
-	{
-		set_simulation_stop_flag(philo->table, true);
-		output_status(philo, true, DIED);
-		pthread_mutex_unlock(&philo->meal_time_mutex);
-		return (true);
-	}
+	current_time = get_current_time_ms();
+	time_to_die = philo->last_meal_time + philo->table->time_to_die;
 	pthread_mutex_unlock(&philo->meal_time_mutex);
+	if (current_time >= time_to_die)
+		return (true);
 	return (false);
 }
 
-static bool	is_end_condition_met(t_table *table)
+static int	find_dead_philosopher_index(t_table *table)
 {
 	unsigned int	i;
-	bool			all_philos_ate_enough;
 
-	all_philos_ate_enough = true;
 	i = 0;
 	while (i < table->number_of_philos)
 	{
 		if (check_philo_death(table->philos[i]))
-			return (true);
+			return (i);
+		i++;
+	}
+	return (-1);
+}
+
+static bool	have_all_philos_eaten_enough(t_table *table)
+{
+	unsigned int	i;
+
+	i = 0;
+	while (i < table->number_of_philos)
+	{
 		pthread_mutex_lock(&table->philos[i]->meal_time_mutex);
 		if (table->must_eat_count != -1)
-			if (table->philos[i]->meal_count
-				< (unsigned int)table->must_eat_count)
-				all_philos_ate_enough = false;
+		{
+			if (table->philos[i]->meal_count < \
+									(unsigned int)table->must_eat_count)
+			{
+				pthread_mutex_unlock(&table->philos[i]->meal_time_mutex);
+				return (false);
+			}
+		}
 		pthread_mutex_unlock(&table->philos[i]->meal_time_mutex);
 		i++;
 	}
-	if (all_philos_ate_enough == true && table->must_eat_count != -1)
+	return (true);
+}
+
+void	*grim_reaper_helper(t_table *table)
+{
+	int		dead_philo_index;
+
+	while (true)
 	{
-		set_simulation_stop_flag(table, true);
-		return (true);
+		dead_philo_index = find_dead_philosopher_index(table);
+		if (dead_philo_index != -1)
+		{
+			set_simulation_ended(table);
+			if (table->must_eat_count != -1 && \
+					!have_all_philos_eaten_enough(table))
+				output_status(table->philos[dead_philo_index], true, DIED);
+			else if (table->must_eat_count == -1)
+				output_status(table->philos[dead_philo_index], true, DIED);
+			return (NULL);
+		}
+		if (table->must_eat_count != -1)
+		{
+			if (have_all_philos_eaten_enough(table))
+			{
+				set_simulation_ended(table);
+				return (NULL);
+			}
+		}
+		usleep(999);
 	}
-	return (false);
 }
 
 void	*grim_reaper(void *data)
 {
-	t_table			*table;
+	t_table	*table;
 
 	table = (t_table *)data;
 	if (table->must_eat_count == 0)
 		return (NULL);
-	set_simulation_stop_flag(table, false);
 	wait_until_start_time(table->start_time);
-	while (true)
-	{
-		if (is_end_condition_met(table) == true)
-			return (NULL);
-		usleep(1000);
-	}
+	grim_reaper_helper(table);
 	return (NULL);
 }
