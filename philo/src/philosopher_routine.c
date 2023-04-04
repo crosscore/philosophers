@@ -6,7 +6,7 @@
 /*   By: ysakahar <ysakahar@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 21:32:59 by ysakahar          #+#    #+#             */
-/*   Updated: 2023/04/03 20:35:48 by ysakahar         ###   ########.fr       */
+/*   Updated: 2023/04/04 06:07:37 by ysakahar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,8 @@
 
 void	think_routine(t_philo *philo)
 {
-	usleep(500);
 	output_status(philo, false, THINKING);
-	usleep(500);
+	usleep(1000);
 }
 
 void	got_fork_and_eat_routine(t_philo *philo)

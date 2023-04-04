@@ -6,7 +6,7 @@
 /*   By: ysakahar <ysakahar@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 20:47:25 by ysakahar          #+#    #+#             */
-/*   Updated: 2023/04/03 20:20:06 by ysakahar         ###   ########.fr       */
+/*   Updated: 2023/04/04 14:33:19 by ysakahar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ static bool	have_all_philos_eaten_enough(t_table *table)
 	return (true);
 }
 
-void	*grim_reaper_helper(t_table *table)
+static void	*grim_reaper_helper(t_table *table)
 {
 	int		dead_philo_index;
 
@@ -88,7 +88,7 @@ void	*grim_reaper_helper(t_table *table)
 				return (NULL);
 			}
 		}
-		usleep(999);
+		usleep(699);
 	}
 }
 

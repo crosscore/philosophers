@@ -6,13 +6,13 @@
 /*   By: ysakahar <ysakahar@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:22:09 by ysakahar          #+#    #+#             */
-/*   Updated: 2023/04/03 14:06:13 by ysakahar         ###   ########.fr       */
+/*   Updated: 2023/04/04 14:40:51 by ysakahar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	destroy_mutexes(t_table *table)
+static void	destroy_mutexes(t_table *table)
 {
 	unsigned int	i;
 

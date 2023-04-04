@@ -6,7 +6,7 @@
 /*   By: ysakahar <ysakahar@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:22:45 by ysakahar          #+#    #+#             */
-/*   Updated: 2023/04/03 18:23:39 by ysakahar         ###   ########.fr       */
+/*   Updated: 2023/04/04 06:07:28 by ysakahar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,14 +27,8 @@ void	wait_time_for_action(t_table *table, time_t wait_time)
 	wake_up_time = get_current_time_ms() + wait_time;
 	while (get_current_time_ms() < wake_up_time)
 	{
-		pthread_mutex_lock(&table->is_sim_ended_mutex);
-		if (table->is_sim_ended)
-		{
-			pthread_mutex_unlock(&table->is_sim_ended_mutex);
+		if (is_simulation_ended(table))
 			break ;
-		}
-		else
-			pthread_mutex_unlock(&table->is_sim_ended_mutex);
 		usleep(99);
 	}
 }

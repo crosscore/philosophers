@@ -6,7 +6,7 @@
 /*   By: ysakahar <ysakahar@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/28 21:07:35 by ysakahar          #+#    #+#             */
-/*   Updated: 2023/04/03 20:36:31 by ysakahar         ###   ########.fr       */
+/*   Updated: 2023/04/04 14:41:59 by ysakahar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,24 +89,23 @@ typedef enum e_ph_status
 }	t_ph_status;
 
 /* create_table.c */
+int				strdigit_to_int(char *str);
 t_table			*create_table(int argc, char **argv);
 
 /* free_and_errors.c */
+int				print_error(char *str, char *detail, int exit_no);
+void			*free_error_ret_null(char *str, char *details, t_table *table);
 void			*free_table(t_table *table);
-void			destroy_mutexes(t_table *table);
 
 /* grim_reaper.c */
 void			*grim_reaper(void *data);
 
 /* input_validator.c */
 bool			is_valid_input(int argc, char **argv);
-int				strdigit_to_int(char *str);
 
 /* output.c */
-void			output_status(t_philo *philo, bool reaper, t_ph_status status);
 void			print_meal_completion_status(t_table *table);
-void			*free_error_ret_null(char *str, char *details, t_table *table);
-int				print_error(char *str, char *detail, int exit_no);
+void			output_status(t_philo *philo, bool reaper, t_ph_status status);
 
 /* philosopher_routine.c */
 void			think_routine(t_philo *philo);

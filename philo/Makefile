@@ -6,7 +6,7 @@
 #    By: ysakahar <ysakahar@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/01 00:11:40 by ysakahar          #+#    #+#              #
-#    Updated: 2023/04/03 20:23:16 by ysakahar         ###   ########.fr        #
+#    Updated: 2023/04/04 14:42:18 by ysakahar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ CC		:= gcc
 CFLAGS	:= -Werror -Wall -Wextra -pthread
 INC		:= -I ./includes/
 
-DEBUG_MODE ?= 0
+DEBUG_MODE ?= 1
 CFLAGS	+= -D DEBUG_MODE=$(DEBUG_MODE)
 
 ifeq ($(DEBUG_MODE), 1)
