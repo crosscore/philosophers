@@ -6,7 +6,7 @@
 /*   By: ysakahar <ysakahar@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:22:09 by ysakahar          #+#    #+#             */
-/*   Updated: 2023/04/04 14:40:51 by ysakahar         ###   ########.fr       */
+/*   Updated: 2023/04/06 12:24:03 by ysakahar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ static void	destroy_mutexes(t_table *table)
 		i++;
 	}
 	pthread_mutex_destroy(&table->write_mutex);
+	pthread_mutex_destroy(&table->is_sim_ended_mutex);
 }
 
 void	*free_table(t_table *table)
